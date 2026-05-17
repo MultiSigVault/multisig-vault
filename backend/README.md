@@ -1,495 +1,305 @@
-# MultiSig Vault Backend API
+# MultiSig Vault Backend
 
-[![Node.js](https://img.shields.io/badge/Node.js-20.x-green)](https://nodejs.org/)
-[![Express.js](https://img.shields.io/badge/Express.js-4.18-blue)](https://expressjs.com/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-5.0-2D3748)](https://www.prisma.io/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1)](https://www.postgresql.org/)
-[![Redis](https://img.shields.io/badge/Redis-7.0-DC382D)](https://redis.io/)
+A robust, scalable NestJS backend for the MultiSig Vault multi-signature treasury platform on Stellar. This repository contains the core API and services that power the vault ecosystem.
 
-## 🚀 Overview
+## 📋 Table of Contents
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Development](#development)
+- [API Documentation](#api-documentation)
+- [Contributing](#contributing)
+- [License](#license)
 
-The MultiSig Vault Backend is a robust, production-ready REST API and WebSocket server for managing multi-signature wallets on the Stellar blockchain. Built with Express.js, TypeScript, and Prisma ORM, it provides secure, scalable, and real-time capabilities for vault management.
+## 🎯 Overview
 
-## ✨ Features
+MultiSig Vault is a decentralized treasury management platform designed to help DAOs, teams, and organizations manage funds with multi-signature security. The backend provides:
 
-- **🔐 Authentication** - JWT-based auth with refresh tokens
-- **📊 Vault Management** - Create, read, update, delete vaults
-- **💸 Transaction Processing** - Handle multi-sig transactions
-- **🔔 Real-time Updates** - WebSocket for live notifications
-- **⏰ Background Jobs** - Bull queue for async processing
-- **📈 Analytics** - Transaction metrics and reporting
-- **🔄 Webhooks** - External service integration
-- **🚦 Rate Limiting** - DDoS protection
-- **📝 Audit Logging** - Complete action history
-- **🧪 Comprehensive Tests** - Unit, integration, e2e
+- **Vault Management**: Create, update, pause, and resume multi-signature vaults
+- **Transaction Processing**: Submit, approve, revoke, and execute transactions
+- **Spending Policies**: Configure daily, weekly, monthly limits per signer
+- **Time Locks**: Delayed transaction execution for security
+- **Scheduled Payments**: Recurring payments (daily, weekly, monthly, yearly)
+- **Social Recovery**: Guardian-based key recovery system
+- **Audit Logging**: Complete immutable transaction history with IPFS
+- **API Documentation**: Auto-generated Swagger documentation
 
-## 📋 Prerequisites
+## 🛠 Tech Stack
 
-- Node.js 20+ or Bun 1.0+
+| Category | Technology |
+|----------|------------|
+| Runtime | Node.js (v18+) |
+| Framework | NestJS 10+ |
+| Language | TypeScript |
+| Database | PostgreSQL with TypeORM |
+| Cache | Redis + BullMQ |
+| Authentication | JWT |
+| Blockchain | Stellar SDK, Soroban SDK |
+| Testing | Jest |
+| API Docs | Swagger/OpenAPI |
+
+## 📁 Project Structure
+backend/
+├── src/
+│ ├── main.ts # Application entry point
+│ ├── app.module.ts # Root module
+│ ├── common/ # Shared utilities and components
+│ │ ├── guards/ # Authentication & authorization guards
+│ │ └── interceptors/ # Request/response interceptors
+│ ├── config/ # Configuration management
+│ │ ├── database.config.ts
+│ │ └── app.config.ts
+│ ├── database/ # Database setup and migrations
+│ │ ├── migrations/
+│ │ ├── seeds/
+│ │ └── entities/
+│ ├── modules/ # Feature modules
+│ │ ├── users/ # User management module
+│ │ │ ├── users.module.ts
+│ │ │ ├── users.controller.ts
+│ │ │ ├── users.service.ts
+│ │ │ ├── entities/
+│ │ │ └── dtos/
+│ │ ├── vaults/ # Vault management module
+│ │ │ ├── vaults.module.ts
+│ │ │ ├── vaults.controller.ts
+│ │ │ ├── vaults.service.ts
+│ │ │ ├── entities/
+│ │ │ └── dtos/
+│ │ └── transactions/ # Transaction processing module
+│ │ ├── transactions.module.ts
+│ │ ├── transactions.controller.ts
+│ │ ├── transactions.service.ts
+│ │ ├── entities/
+│ │ └── dtos/
+│ └── shared/ # Shared services (mail, notifications, etc.)
+│ ├── mail/
+│ └── logger/
+├── test/ # End-to-end tests
+│ └── app.e2e.spec.ts
+├── package.json
+├── tsconfig.json
+├── nest-cli.json
+├── jest.config.js
+├── .env.example
+├── .eslintrc.js
+├── .prettierrc
+├── .gitignore
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js >= 18.x
+- npm, yarn, or pnpm
 - PostgreSQL 15+
 - Redis 7+
-- Stellar account (testnet or mainnet)
 
-## 🛠️ Installation
+### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/multisig-vault.git
+git clone https://github.com/MultiSigVault/multisig-vault.git
 cd multisig-vault/backend
 
 # Install dependencies
 npm install
-# or
-bun install
 
-# Copy environment variables
+# Setup environment variables
 cp .env.example .env
+# Edit .env with your configuration
 
-# Setup database
-npx prisma migrate dev
-npx prisma generate
+# Run database migrations
+npm run typeorm migration:run
 
-# Start development server
-npm run dev
+# Seed the database (optional)
+npm run seed
 
-🔧 Environment Variables
-# Server
-PORT=3001
-NODE_ENV=development
+# Start the development server
+npm run start:dev
+The application will be available at http://localhost:3001
+**💻 Development**
+**Available Scripts**
+# Development
+npm run start          # Start the application
+npm run start:dev     # Start with hot reload
+npm run start:debug   # Start with debug mode
+
+# Building
+npm run build         # Build for production
+npm run build:watch   # Build with watch mode
+
+# Testing
+npm run test          # Run unit tests
+npm run test:watch    # Run tests with watch mode
+npm run test:cov      # Run tests with coverage
+npm run test:e2e      # Run e2e tests
 
 # Database
-DATABASE_URL="postgresql://user:password@localhost:5432/multisig_db"
+npm run typeorm migration:run     # Run migrations
+npm run typeorm migration:revert  # Revert last migration
+npm run seed                      # Seed the database
 
-# Redis
-REDIS_URL="redis://localhost:6379"
+# Linting & Formatting
+npm run lint         # Run ESLint
+npm run lint:fix     # Fix linting errors
+npm run format       # Format with Prettier
+
+**Code Style**
+This project uses ESLint and Prettier for code consistency:
+# Format all files
+npm run format
+
+# Check and fix linting issues
+npm run lint:fix
+
+**Environment Variables**
+See .env.example for all available environment variables:
+# App
+NODE_ENV=development
+PORT=3001
+
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=multisig_vault
 
 # JWT
-JWT_SECRET="your-super-secret-jwt-key"
-JWT_REFRESH_SECRET="your-refresh-secret"
-JWT_EXPIRES_IN="15m"
-JWT_REFRESH_EXPIRES_IN="7d"
+JWT_SECRET=your-secret-key
+JWT_EXPIRATION=7d
 
 # Stellar
-STELLAR_NETWORK="TESTNET"
-STELLAR_PASSPHRASE="Test SDF Network ; September 2015"
-SOROBAN_RPC_URL="https://soroban-testnet.stellar.org"
+STELLAR_NETWORK=testnet
+HORIZON_URL=https://horizon-testnet.stellar.org
+CONTRACT_ID=your_contract_id
+**📚 API Documentation**
+API documentation is available via Swagger at: http://localhost:3001/api/docs
+# npm run swagger
 
-# Contract IDs
-MULTISIG_FACTORY_ID="your_factory_contract_id"
-
-# Rate Limiting
-RATE_LIMIT_WINDOW_MS=900000
-RATE_LIMIT_MAX_REQUESTS=100
-
-# Webhooks
-WEBHOOK_TIMEOUT=5000
-WEBHOOK_RETRY_ATTEMPTS=3
-
-# Logging
-LOG_LEVEL="info"
-
-# CORS
-CORS_ORIGIN="http://localhost:3000"
-
-📁 Project Structure
-backend/
-├── 📁 src/
-│   ├── 📁 config/          # Configuration files
-│   │   ├── database.ts
-│   │   ├── redis.ts
-│   │   └── stellar.ts
-│   ├── 📁 controllers/     # Request handlers
-│   │   ├── auth.controller.ts
-│   │   ├── vault.controller.ts
-│   │   ├── transaction.controller.ts
-│   │   └── webhook.controller.ts
-│   ├── 📁 services/        # Business logic
-│   │   ├── vault.service.ts
-│   │   ├── transaction.service.ts
-│   │   ├── stellar.service.ts
-│   │   └── notification.service.ts
-│   ├── 📁 middleware/      # Express middleware
-│   │   ├── auth.ts
-│   │   ├── rateLimit.ts
-│   │   ├── validation.ts
-│   │   └── errorHandler.ts
-│   ├── 📁 models/          # Prisma models (generated)
-│   ├── 📁 routes/          # API endpoints
-│   │   ├── auth.routes.ts
-│   │   ├── vaults.routes.ts
-│   │   ├── transactions.routes.ts
-│   │   └── webhooks.routes.ts
-│   ├── 📁 workers/         # Background jobs
-│   │   ├── transaction.worker.ts
-│   │   ├── notification.worker.ts
-│   │   └── webhook.worker.ts
-│   ├── 📁 utils/           # Helper functions
-│   │   ├── logger.ts
-│   │   ├── stellar.ts
-│   │   └── validation.ts
-│   ├── 📁 types/           # TypeScript types
-│   │   └── index.ts
-│   └── 📄 app.ts           # Express app setup
-├── 📁 prisma/
-│   ├── 📄 schema.prisma    # Database schema
-│   └── 📁 migrations/      # Database migrations
-├── 📁 tests/
-│   ├── 📁 unit/
-│   ├── 📁 integration/
-│   └── 📁 e2e/
-├── 📄 package.json
-├── 📄 tsconfig.json
-└── 📄 .env.example
-
-🗄️ Database Schema
-model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  publicKey     String    @unique
-  nonce         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  vaults        Vault[]
-  transactions  Transaction[]
-  approvals     Approval[]
-}
-
-model Vault {
-  id            String    @id @default(cuid())
-  address       String    @unique
-  name          String
-  description   String?
-  threshold     Int
-  signers       String[]  // Array of public keys
-  dailyLimit    Float?
-  allowedAssets String[]  // Array of asset codes
-  status        Status    @default(ACTIVE)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  userId        String
-  user          User      @relation(fields: [userId], references: [id])
-  transactions  Transaction[]
-}
-
-model Transaction {
-  id            String    @id @default(cuid())
-  hash          String    @unique
-  destination   String
-  amount        Float
-  asset         String    @default("XLM")
-  status        TxStatus  @default(PENDING)
-  approvals     String[]  // Array of public keys
-  rejections    String[]  // Array of public keys
-  executedAt    DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  vaultId       String
-  vault         Vault     @relation(fields: [vaultId], references: [id])
-  userId        String
-  user          User      @relation(fields: [userId], references: [id])
-  approvalsList Approval[]
-}
-
-model Approval {
-  id            String    @id @default(cuid())
-  signer        String
-  type          ApprovalType // APPROVE, REJECT
-  createdAt     DateTime  @default(now())
-  transactionId String
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
-}
-
-model Webhook {
-  id            String    @id @default(cuid())
-  url           String
-  events        String[]  // transaction.created, vault.updated, etc.
-  secret        String
-  status        WebhookStatus @default(ACTIVE)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-}
-
-model AuditLog {
-  id            String    @id @default(cuid())
-  action        String
-  entityType    String
-  entityId      String
-  changes       Json?
-  userId        String
-  ipAddress     String?
-  userAgent     String?
-  createdAt     DateTime  @default(now())
-}
-
-enum Status {
-  ACTIVE
-  PENDING
-  ARCHIVED
-}
-
-enum TxStatus {
-  PENDING
-  APPROVED
-  EXECUTED
-  REJECTED
-}
-
-enum ApprovalType {
-  APPROVE
-  REJECT
-}
-
-enum WebhookStatus {
-  ACTIVE
-  INACTIVE
-  FAILED
-}
-
-📡 API Endpoints
-Authentication
-Method	Endpoint	Description
-POST	/api/auth/nonce	Get nonce for wallet
-POST	/api/auth/login	Login with signed message
-POST	/api/auth/refresh	Refresh access token
-POST	/api/auth/logout	Logout user
-GET	/api/auth/me	Get current user
-Vaults
-Method	Endpoint	Description
-GET	/api/vaults	List user's vaults
-POST	/api/vaults	Create new vault
-GET	/api/vaults/:id	Get vault details
-PUT	/api/vaults/:id	Update vault
-DELETE	/api/vaults/:id	Delete vault
-GET	/api/vaults/:id/balance	Get vault balance
-POST	/api/vaults/:id/signers	Add signer
-DELETE	/api/vaults/:id/signers/:signer	Remove signer
-Transactions
-Method	Endpoint	Description
-GET	/api/transactions	List transactions
-POST	/api/transactions	Create transaction
-GET	/api/transactions/:id	Get transaction
-POST	/api/transactions/:id/approve	Approve transaction
-POST	/api/transactions/:id/reject	Reject transaction
-POST	/api/transactions/:id/execute	Execute transaction
-Webhooks
-Method	Endpoint	Description
-GET	/api/webhooks	List webhooks
-POST	/api/webhooks	Create webhook
-PUT	/api/webhooks/:id	Update webhook
-DELETE	/api/webhooks/:id	Delete webhook
-POST	/api/webhooks/:id/test	Test webhook
-Analytics
-Method	Endpoint	Description
-GET	/api/analytics/dashboard	Dashboard stats
-GET	/api/analytics/transactions	Transaction metrics
-GET	/api/analytics/vaults	Vault metrics
-Health
-Method	Endpoint	Description
-GET	/health	Health check
-GET	/health/detailed	Detailed health
-GET	/metrics	Prometheus metrics
-
-🔌 WebSocket Events
-Connect to: ws://localhost:3001
-Client → Server
-// Subscribe to events
-socket.emit('subscribe', { 
-  room: 'vault:123', 
-  events: ['transaction.created', 'transaction.approved'] 
-});
-
-// Unsubscribe
-socket.emit('unsubscribe', { room: 'vault:123' });
-Server → Client
-// Transaction events
-{
-  type: 'transaction.created',
-  data: { id, hash, amount, destination }
-}
-
-{
-  type: 'transaction.approved',
-  data: { id, approver, approvalsNeeded, currentApprovals }
-}
-
-{
-  type: 'transaction.executed',
-  data: { id, hash, executedAt }
-}
-
-// Vault events
-{
-  type: 'vault.updated',
-  data: { id, changes }
-}
-
-// Notification
-{
-  type: 'notification',
-  data: { title, message, severity }
-}
-
-🧪 Testing
+**🧪 Testing**
+The project uses Jest for unit and integration testing.
+**Running Tests**
 # Run all tests
-npm test
+npm run test
 
-# Run specific test suites
-npm run test:unit      # Unit tests
-npm run test:integration  # Integration tests
-npm run test:e2e       # End-to-end tests
-
-# Run with coverage
-npm run test:coverage
-
-# Watch mode
+# Run tests in watch mode
 npm run test:watch
 
-🔄 Background Jobs
-The backend uses Bull queue for async processing:
+# Run tests with coverage
+npm run test:cov
 
-Transaction Jobs
-Processing - Validate and queue transactions
+**Writing Tests**
+Create test files next to the modules with .spec.ts suffix:
+// Example: vaults.service.spec.ts
+import { Test, TestingModule } from '@nestjs/testing';
+import { VaultsService } from './vaults.service';
 
-Execution - Submit to Stellar network
+describe('VaultsService', () => {
+  let service: VaultsService;
 
-Confirmation - Wait for finality
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [VaultsService],
+    }).compile();
 
-Notification Jobs
-Email - Send email notifications
+    service = module.get<VaultsService>(VaultsService);
+  });
 
-Webhook - Call external webhooks
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+});
 
-Push - Mobile push notifications
+**🐳 Docker**
+Build Docker Image
+docker build -t multisig-backend 
+**Run with Docker Compose**
+docker-compose up -d
+**Docker Compose Configuration**
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: multisig_vault
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
-Cleanup Jobs
-Old Logs - Clean audit logs (>90 days)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
 
-Stale Transactions - Cancel pending >7 days
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DB_HOST: postgres
+      REDIS_HOST: redis
 
-Session Cleanup - Remove expired sessions
-
-📊 Monitoring & Logging
-Log Levels
-error - System errors
-
-warn - Warnings, rate limiting
-
-info - Important operations
-
-debug - Detailed debugging
-
-trace - Very detailed (dev only)
-
-Metrics (Prometheus)
-# API metrics
-http_requests_total
-http_request_duration_seconds
-http_errors_total
-
-# Business metrics
-transactions_total
-transactions_pending
-vaults_total
-
-# System metrics
-db_connection_pool
-redis_connected_clients
-queue_job_counts
-
-🐳 Docker Deployment
-# Build image
-docker build -t multisig-backend .
-
-# Run container
-docker run -p 3001:3001 \
-  -e DATABASE_URL=postgresql://... \
-  -e REDIS_URL=redis://... \
-  multisig-backend
-
-# With docker-compose
-docker-compose up -d backend
-
-📈 Performance
-Response Time: <50ms (p95)
-
-Throughput: 10,000 req/s
-
-WebSocket: 5,000 concurrent connections
-
-Database: 1,000 tx/s
-
-Queue: 1,000 jobs/s
-
-🔒 Security Best Practices
-JWT tokens - Short-lived access tokens (15m)
-
-Refresh tokens - Rotate on each use
-
-Rate limiting - Per user/IP
-
-Input validation - Zod schemas
-
-SQL injection - Prisma prevents
-
-XSS protection - Helmet.js
-
-CORS - Restrict allowed origins
-
-Helmet - Secure HTTP headers
-
-Data encryption - Sensitive data
-
-Audit logs - All actions logged
-
-🚦 Error Handling
-// Error response format
-{
-  "success": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Invalid input",
-    "details": [
-      {
-        "field": "amount",
-        "message": "Must be positive number"
-      }
-    ]
-  }
-}
-
-// HTTP Status Codes
-200 - Success
-201 - Created
-400 - Bad Request
-401 - Unauthorized
-403 - Forbidden
-404 - Not Found
-409 - Conflict
-429 - Too Many Requests
-500 - Internal Server Error
+volumes:
+  postgres_data:
 
 🤝 Contributing
-Fork the repository
+We welcome contributions! Please read our CONTRIBUTING.md for detailed guidelines on:
 
-Create feature branch
+Setting up your development environment
 
-Commit changes
+Making code changes
 
-Add tests
+Creating pull requests
 
-Update documentation
+Code review process
 
-Push to branch
+Commit message conventions
 
-Open Pull Request
+Commit Convention
+We follow conventional commits:
+
+Type	Description
+feat	New feature
+fix	Bug fix
+docs	Documentation update
+style	Code style changes
+refactor	Code refactor
+test	Add or update tests
+chore	Maintenance tasks
+🔒 Security
+Never commit .env files with sensitive data
+
+Always use environment variables for secrets
+
+Validate all user inputs
+
+Follow OWASP security guidelines
+
+Report security issues to the maintainers
 
 📄 License
-MIT © 2024 MultiSig Vault
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-🌟 Support
-Documentation: docs.multisigvault.com/api
+🆘 Support
+For issues, questions, or suggestions:
 
-Discord: discord.gg/multisigvault
+Check existing GitHub Issues
 
-GitHub Issues: github.com/your-org/multisig-vault/issues  
+Create a new issue with a clear description
+
+Contact the maintainers
+
+
+
+
