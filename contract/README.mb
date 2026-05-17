@@ -1,9 +1,6 @@
 # MultiSig Vault Smart Contract
-
 ## Overview
-
 A production-ready Soroban smart contract for multi-signature treasury vaults on Stellar. This contract enables secure management of digital assets with customizable signature thresholds, time locks, scheduled payments, and spending policies.
-
 ## 📋 Table of Contents
 - [Overview](#overview)
 - [Features](#features)
@@ -19,11 +16,8 @@ A production-ready Soroban smart contract for multi-signature treasury vaults on
 - [Security Considerations](#security-considerations)
 - [Contributing](#contributing)
 - [License](#license)
-
 ## 🎯 Overview
-
 MultiSig Vault is a decentralized treasury management platform built on Stellar Soroban. The smart contract provides:
-
 - **Vault Creation**: Create multi-signature vaults with configurable signers and thresholds
 - **Transaction Processing**: Submit, approve, revoke, and execute transactions
 - **Spending Policies**: Configure daily, weekly, monthly limits per signer
@@ -31,9 +25,7 @@ MultiSig Vault is a decentralized treasury management platform built on Stellar 
 - **Scheduled Payments**: Recurring payments (daily, weekly, monthly, yearly)
 - **Social Recovery**: Guardian-based key recovery system
 - **Audit Logging**: Complete immutable transaction history with IPFS
-
 ## ✨ Features
-
 | Feature | Description |
 |---------|-------------|
 | **Multi-Signature Security** | M-of-N signature requirements (2-of-3, 3-of-5, custom) |
@@ -44,9 +36,7 @@ MultiSig Vault is a decentralized treasury management platform built on Stellar 
 | **Audit Logs** | IPFS-backed immutable history |
 | **Emergency Pause** | Contract-level emergency stop |
 | **Batch Transactions** | Execute multiple transactions at once |
-
 ## 🛠 Tech Stack
-
 | Category | Technology | Version |
 |----------|------------|---------|
 | Language | Rust | 1.70+ |
@@ -55,7 +45,6 @@ MultiSig Vault is a decentralized treasury management platform built on Stellar 
 | Testing | cargo test | - |
 | Linting | cargo clippy | - |
 | Formatting | cargo fmt | - |
-
 ## 🏗 Contract Architecture
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ MultiSig Vault Contract                                                     │
@@ -69,26 +58,22 @@ MultiSig Vault is a decentralized treasury management platform built on Stellar 
 │ - Pause     │ - Execute   │ Limit       │ - Approve   │                     │
 │ - Resume    │ - Reject    │             │ - Complete  │                     │
 └─────────────┴─────────────┴─────────────┴─────────────┴─────────────────────┘
-
 ## 📁 Project Structure
 contract/
 ├── src/
-│ ├── lib.rs # Main contract entry point
-│ ├── vault.rs # Vault creation and management
-│ ├── transaction.rs # Transaction submission and approval
-│ ├── policy.rs # Spending policies and trackers
-│ ├── recovery.rs # Social recovery system
-│ ├── timelock.rs # Time-locked transactions
-│ ├── scheduled.rs # Recurring payments
-│ ├── audit.rs # Audit logging with IPFS
-│ └── test.rs # Comprehensive unit tests
+│   ├── lib.rs # Main contract entry point
+│   ├── vault.rs # Vault creation and management
+│   ├── transaction.rs # Transaction submission and approval
+│   ├── policy.rs # Spending policies and trackers
+│   ├── recovery.rs # Social recovery system
+│   ├── timelock.rs # Time-locked transactions
+│   ├── scheduled.rs # Recurring payments
+│   ├── audit.rs # Audit logging with IPFS
+│   └── test.rs # Comprehensive unit tests
 ├── Cargo.toml
 └── README.md
-
 ## 📊 Data Structures
-
 ### Vault Structure
-
 ```rust
 pub struct Vault {
     pub id: u64,
@@ -115,6 +100,7 @@ pub struct Transaction {
     pub created_at: u64,
     pub executed_at: Option<u64>,
 }
+
 Spending Policy Structure
 pub struct SpendingPolicy {
     pub vault_id: u64,
@@ -125,155 +111,168 @@ pub struct SpendingPolicy {
     pub per_transaction_limit: i128,
     pub updated_at: u64,
 }
+
 🚀 Getting Started
-Prerequisites
-Requirement	Version	Installation
-Rust	1.70+	rustup.rs
-WASM32 target	-	rustup target add wasm32-unknown-unknown
-Soroban CLI	Latest	cargo install soroban-cli
+| Requirement   | Version | Installation                             |
+| ------------- | ------- | ---------------------------------------- |
+| Rust          | 1.70+   | rustup.rs                                |
+| WASM32 target | -       | rustup target add wasm32-unknown-unknown |
+| Soroban CLI   | Latest  | cargo install soroban-cli                |
+
 Installation
 # Clone the repository
 git clone https://github.com/MultiSigVault/multisig-vault.git
 cd multisig-vault/contract
-
 # Build the contract
 cargo build --target wasm32-unknown-unknown --release
-
 # Run tests
 cargo test
-
 # Check formatting
 cargo fmt
-
 # Run linter
 cargo clippy -- -D warnings
+
 📜 Contract Functions
 Vault Management
-Function	Parameters	Description	Auth
-create_vault	signers, threshold, name, description	Creates new multi-signature vault	Creator
-get_vault	vault_id	Returns vault details	Anyone
-update_vault	vault_id, name, description	Updates vault metadata	Any signer
-pause_vault	vault_id	Pauses all vault operations	Admin
-resume_vault	vault_id	Resumes vault operations	Admin
+| Function     | Parameters                            | Description                       | Auth       |
+| ------------ | ------------------------------------- | --------------------------------- | ---------- |
+| create_vault | signers, threshold, name, description | Creates new multi-signature vault | Creator    |
+| get_vault    | vault_id                              | Returns vault details             | Anyone     |
+| update_vault | vault_id, name, description           | Updates vault metadata            | Any signer |
+| pause_vault  | vault_id                              | Pauses all vault operations       | Admin      |
+| resume_vault | vault_id                              | Resumes vault operations          | Admin      |
+
 Signer Management
-Function	Parameters	Description	Auth
-add_signer	vault_id, new_signer	Adds new signer to vault	Admin
-remove_signer	vault_id, signer	Removes signer from vault	Admin
-update_threshold	vault_id, new_threshold	Changes approval threshold	Admin
+| Function         | Parameters              | Description                | Auth  |
+| ---------------- | ----------------------- | -------------------------- | ----- |
+| add_signer       | vault_id, new_signer    | Adds new signer to vault   | Admin |
+| remove_signer    | vault_id, signer        | Removes signer from vault  | Admin |
+| update_threshold | vault_id, new_threshold | Changes approval threshold | Admin |
+
 Transaction Management
-Function	Parameters	Description	Auth
-submit_transaction	vault_id, to, amount, token, description	Proposes new transaction	Any signer
-approve_transaction	vault_id, tx_id	Approves pending transaction	Signer
-revoke_approval	vault_id, tx_id	Revokes existing approval	Signer
-execute_transaction	vault_id, tx_id	Executes after threshold met	Anyone
-reject_transaction	vault_id, tx_id	Rejects pending transaction	Signer
+| Function            | Parameters                               | Description                  | Auth       |
+| ------------------- | ---------------------------------------- | ---------------------------- | ---------- |
+| submit_transaction  | vault_id, to, amount, token, description | Proposes new transaction     | Any signer |
+| approve_transaction | vault_id, tx_id                          | Approves pending transaction | Signer     |
+| revoke_approval     | vault_id, tx_id                          | Revokes existing approval    | Signer     |
+| execute_transaction | vault_id, tx_id                          | Executes after threshold met | Anyone     |
+| reject_transaction  | vault_id, tx_id                          | Rejects pending transaction  | Signer     |
+
 Spending Policies
-Function	Parameters	Description	Auth
-set_spending_policy	vault_id, signer, daily, weekly, monthly	Sets spending limits	Admin
-get_spending_policy	vault_id, signer	Gets signer's limits	Anyone
-remove_spending_policy	vault_id, signer	Removes spending policy	Admin
+| Function               | Parameters                               | Description             | Auth   |
+| ---------------------- | ---------------------------------------- | ----------------------- | ------ |
+| set_spending_policy    | vault_id, signer, daily, weekly, monthly | Sets spending limits    | Admin  |
+| get_spending_policy    | vault_id, signer                         | Gets signer's limits    | Anyone |
+| remove_spending_policy | vault_id, signer                         | Removes spending policy | Admin  |
+
 Time Locks
-Function	Parameters	Description	Auth
-create_timelock	vault_id, tx_id, delay_seconds	Adds time delay to transaction	Proposer
-get_timelock	vault_id, tx_id	Gets timelock details	Anyone
-execute_timelock	vault_id, tx_id	Executes after delay expires	Anyone
+| Function         | Parameters                     | Description                    | Auth     |
+| ---------------- | ------------------------------ | ------------------------------ | -------- |
+| create_timelock  | vault_id, tx_id, delay_seconds | Adds time delay to transaction | Proposer |
+| get_timelock     | vault_id, tx_id                | Gets timelock details          | Anyone   |
+| execute_timelock | vault_id, tx_id                | Executes after delay expires   | Anyone   |
+
 Scheduled Payments
-Function	Parameters	Description	Auth
-schedule_transaction	vault_id, to, amount, frequency, start_time	Sets up recurring payment	Admin
-get_schedule	schedule_id	Gets schedule details	Anyone
-process_scheduled	vault_id	Processes due scheduled payments	Anyone
-cancel_schedule	schedule_id	Cancels scheduled payment	Admin
+| Function             | Parameters                                  | Description                      | Auth   |
+| -------------------- | ------------------------------------------- | -------------------------------- | ------ |
+| schedule_transaction | vault_id, to, amount, frequency, start_time | Sets up recurring payment        | Admin  |
+| get_schedule         | schedule_id                                 | Gets schedule details            | Anyone |
+| process_scheduled    | vault_id                                    | Processes due scheduled payments | Anyone |
+| cancel_schedule      | schedule_id                                 | Cancels scheduled payment        | Admin  |
+
 Social Recovery
-Function	Parameters	Description	Auth
-add_guardian	vault_id, guardian	Adds recovery guardian	Admin
-remove_guardian	vault_id, guardian	Removes recovery guardian	Admin
-initiate_recovery	vault_id, new_signer	Starts key recovery process	Any guardian
-approve_recovery	vault_id	Approves recovery request	Guardian
-complete_recovery	vault_id	Completes recovery after threshold	System
+| Function          | Parameters           | Description                        | Auth         |
+| ----------------- | -------------------- | ---------------------------------- | ------------ |
+| add_guardian      | vault_id, guardian   | Adds recovery guardian             | Admin        |
+| remove_guardian   | vault_id, guardian   | Removes recovery guardian          | Admin        |
+| initiate_recovery | vault_id, new_signer | Starts key recovery process        | Any guardian |
+| approve_recovery  | vault_id             | Approves recovery request          | Guardian     |
+| complete_recovery | vault_id             | Completes recovery after threshold | System       |
+
+
 ❌ Error Handling
-Error	Code	Description
-NotAuthorized	1	Only authorized participants can call
-VaultNotFound	2	Vault ID does not exist
-TransactionNotFound	3	Transaction ID does not exist
-InsufficientApprovals	4	Not enough approvals yet
-VaultAlreadyExists	5	Vault already exists for this ID
-ThresholdTooHigh	6	Threshold exceeds signer count
-InvalidSigners	7	Invalid signer list (min 2 required)
-InvalidThreshold	8	Invalid threshold value
-TransactionNotPending	9	Transaction is not pending
-TransactionAlreadyExecuted	10	Transaction already executed
-InvalidPolicy	11	Invalid spending policy
-PolicyViolation	12	Spending limit exceeded
-TransferFailed	13	Token transfer failed
-GuardianAlreadyExists	14	Guardian already exists
-InsufficientGuardians	15	Not enough guardians for recovery
-TimeLockActive	16	Time lock not expired
-InvalidSchedule	17	Invalid schedule configuration
+| Error                      | Code | Description                           |
+| -------------------------- | ---- | ------------------------------------- |
+| NotAuthorized              | 1    | Only authorized participants can call |
+| VaultNotFound              | 2    | Vault ID does not exist               |
+| TransactionNotFound        | 3    | Transaction ID does not exist         |
+| InsufficientApprovals      | 4    | Not enough approvals yet              |
+| VaultAlreadyExists         | 5    | Vault already exists for this ID      |
+| ThresholdTooHigh           | 6    | Threshold exceeds signer count        |
+| InvalidSigners             | 7    | Invalid signer list (min 2 required)  |
+| InvalidThreshold           | 8    | Invalid threshold value               |
+| TransactionNotPending      | 9    | Transaction is not pending            |
+| TransactionAlreadyExecuted | 10   | Transaction already executed          |
+| InvalidPolicy              | 11   | Invalid spending policy               |
+| PolicyViolation            | 12   | Spending limit exceeded               |
+| TransferFailed             | 13   | Token transfer failed                 |
+| GuardianAlreadyExists      | 14   | Guardian already exists               |
+| InsufficientGuardians      | 15   | Not enough guardians for recovery     |
+| TimeLockActive             | 16   | Time lock not expired                 |
+| InvalidSchedule            | 17   | Invalid schedule configuration        |
+
 📡 Events
-Event	Emitted When
-VaultCreated	New vault is created
-VaultUpdated	Vault metadata is updated
-VaultPaused	Vault is paused
-VaultResumed	Vault is resumed
-TransactionSubmitted	New transaction is proposed
-TransactionApproved	Transaction receives approval
-TransactionRevoked	Approval is revoked
-TransactionExecuted	Transaction is executed
-TransactionRejected	Transaction is rejected
-PolicySet	Spending policy is set
-PolicyRemoved	Spending policy is removed
-TimelockCreated	Time lock is added
-TimelockExecuted	Time lock expires and executes
-ScheduleCreated	Scheduled payment is created
-ScheduleProcessed	Scheduled payment is processed
-RecoveryInitiated	Recovery process starts
-RecoveryApproved	Guardian approves recovery
-RecoveryCompleted	Recovery is completed
+| Event                | Emitted When                   |
+| -------------------- | ------------------------------ |
+| VaultCreated         | New vault is created           |
+| VaultUpdated         | Vault metadata is updated      |
+| VaultPaused          | Vault is paused                |
+| VaultResumed         | Vault is resumed               |
+| TransactionSubmitted | New transaction is proposed    |
+| TransactionApproved  | Transaction receives approval  |
+| TransactionRevoked   | Approval is revoked            |
+| TransactionExecuted  | Transaction is executed        |
+| TransactionRejected  | Transaction is rejected        |
+| PolicySet            | Spending policy is set         |
+| PolicyRemoved        | Spending policy is removed     |
+| TimelockCreated      | Time lock is added             |
+| TimelockExecuted     | Time lock expires and executes |
+| ScheduleCreated      | Scheduled payment is created   |
+| ScheduleProcessed    | Scheduled payment is processed |
+| RecoveryInitiated    | Recovery process starts        |
+| RecoveryApproved     | Guardian approves recovery     |
+| RecoveryCompleted    | Recovery is completed          |
+
 🧪 Testing
 Running Tests
 # Run all tests
 cargo test
-
 # Run with output
 cargo test -- --nocapture
-
 # Run specific test
 cargo test test_create_vault
-
 # Run with coverage
 cargo tarpaulin --ignore-tests
+
 Example Test
 #[cfg(test)]
 mod tests {
     use super::*;
     use soroban_sdk::{Env, Address, String, Vec};
-
     #[test]
     fn test_create_vault() {
         let env = Env::default();
         env.mock_all_auths();
-
         let creator = Address::generate(&env);
         let signer1 = Address::generate(&env);
         let signer2 = Address::generate(&env);
         let signers = Vec::from_array(&env, [signer1, signer2]);
-
         let vault_id = create_vault(
             env.clone(),
             creator,
+
             String::from_str(&env, "Test Vault"),
             String::from_str(&env, "Test Description"),
             signers,
             2,
         ).unwrap();
-
         assert_eq!(vault_id, 1);
-        
         let vault = get_vault(env, vault_id).unwrap();
         assert_eq!(vault.name, String::from_str(&env, "Test Vault"));
         assert_eq!(vault.threshold, 2);
     }
 }
+
 🚀 Deployment
 Deploy to Testnet
 stellar contract deploy \
@@ -289,18 +288,14 @@ Deploy to Mainnet
 stellar contract deploy \
   --wasm target/wasm32-unknown-unknown/release/multisig_vault_contract.wasm \
   --network mainnet
+
 🔒 Security Considerations
 
 Access Control: All sensitive functions use require_auth() to verify caller identity
-
 Input Validation: All inputs are validated before processing
-
 Checked Arithmetic: Uses checked math to prevent overflow
-
 Emergency Pause: Contract can be paused in emergency situations
-
 Audit Trail: All state changes emit events for off-chain monitoring
-
 No Hardcoded Secrets: No private keys or secrets in contract code
 
 🤝 Contributing
@@ -308,16 +303,19 @@ No Hardcoded Secrets: No private keys or secrets in contract code
 We welcome contributions! Please see CONTRIBUTING.md for guidelines.
 
 Commit Convention
-Type	Description
-feat	New feature
-fix	Bug fix
-docs	Documentation
-style	Code style
-refactor	Code refactor
-test	Testing
-chore	Maintenance
+| Type     | Description   |
+| -------- | ------------- |
+| feat     | New feature   |
+| fix      | Bug fix       |
+| docs     | Documentation |
+| style    | Code style    |
+| refactor | Code refactor |
+| test     | Testing       |
+| chore    | Maintenance   |
+
 📄 License
 
 MIT
-
 Built on Stellar Soroban | Secure Multi-Signature Treasury Management
+
+
