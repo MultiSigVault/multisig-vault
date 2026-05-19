@@ -49,78 +49,40 @@ MultiSig Vault is a decentralized treasury management platform designed to help 
 
 ## 📁 Project Structure
 
+```
 backend/
 ├── src/
-│ ├── main.ts # Application entry point
-│ ├── app.module.ts # Root module
-│ ├── common/ # Shared utilities and components
-│ │ ├── decorators/ # Custom decorators (auth, roles, etc.)
-│ │ ├── filters/ # Exception filters
-│ │ ├── guards/ # Authentication & authorization guards
-│ │ ├── interceptors/ # Request/response interceptors
-│ │ ├── pipes/ # Validation and transformation pipes
-│ │ ├── dtos/ # Common DTOs (pagination, responses)
-│ │ └── utils/ # Utility functions and helpers
-│ │
-│ ├── config/ # Configuration management
-│ │ ├── database.config.ts
-│ │ ├── app.config.ts
-│ │ └── validation.schema.ts
-│ │
-│ ├── database/ # Database setup and migrations
-│ │ ├── migrations/
-│ │ ├── seeds/
-│ │ └── entities/ # Database entities
-│ │
-│ ├── modules/ # Feature modules
-│ │ ├── auth/ # Authentication module
-│ │ │ ├── auth.module.ts
-│ │ │ ├── auth.controller.ts
-│ │ │ ├── auth.service.ts
-│ │ │ ├── strategies/ # Passport strategies
-│ │ │ ├── guards/
-│ │ │ └── dtos/
-│ │ │
-│ │ ├── users/ # User management module
-│ │ │ ├── users.module.ts
-│ │ │ ├── users.controller.ts
-│ │ │ ├── users.service.ts
-│ │ │ ├── entities/
-│ │ │ └── dtos/
-│ │ │
-│ │ ├── vaults/ # Vault management module
-│ │ │ ├── vaults.module.ts
-│ │ │ ├── vaults.controller.ts
-│ │ │ ├── vaults.service.ts
-│ │ │ ├── entities/
-│ │ │ └── dtos/
-│ │ │
-│ │ └── transactions/ # Transaction processing module
-│ │ ├── transactions.module.ts
-│ │ ├── transactions.controller.ts
-│ │ ├── transactions.service.ts
-│ │ ├── entities/
-│ │ └── dtos/
-│ │
-│ └── shared/ # Shared services (mail, notifications, etc.)
-│ ├── mail/
-│ ├── notifications/
-│ └── logger/
-│
-├── test/ # End-to-end tests
-│ └── app.e2e.spec.ts
-│
+│   ├── main.ts # Application entry point
+│   ├── app.module.ts # Root module
+│   ├── common/
+│   │   ├── decorators/
+│   │   ├── filters/
+│   │   ├── guards/
+│   │   ├── interceptors/
+│   │   ├── pipes/
+│   │   ├── dtos/
+│   │   └── utils/
+│   ├── config/
+│   │   ├── database.config.ts
+│   │   ├── app.config.ts
+│   │   └── validation.schema.ts
+│   ├── database/
+│   │   ├── migrations/
+│   │   ├── seeds/
+│   │   └── entities/
+│   ├── modules/
+│   │   ├── auth/
+│   │   ├── users/
+│   │   ├── vaults/
+│   │   └── transactions/
+│   └── shared/
+│       ├── mail/
+│       ├── notifications/
+│       └── logger/
+├── test/
 ├── package.json
-├── tsconfig.json
-├── nest-cli.json
-├── jest.config.js
-├── .env.example
-├── .eslintrc.js
-├── .prettierrc
-├── .gitignore
-├── Dockerfile
-├── docker-compose.yml
 └── README.md
+```
 
 
 ## 🚀 Getting Started
