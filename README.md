@@ -1,154 +1,117 @@
-# 🔐 MultiSig Vault
+# MultiSig Vault
 
-### A production-ready multi-signature treasury vault for DAOs and teams on Stellar Soroban
-
-**Secure | Decentralized | Transparent**
-
----
+A production-ready multi-signature treasury vault for DAOs and teams on Stellar Soroban.
 
 ## 📋 Table of Contents
-
-- [Overview](#-overview)
-- [Tech Stack](#-tech-stack)
-- [Features](#-features)
-- [Project Structure](#-project-structure)
-- [Prerequisites](#-prerequisites)
-- [Getting Started](#-getting-started)
-- [Smart Contract](#-smart-contract)
-- [API Documentation](#-api-documentation)
-- [Testing](#-testing)
-- [Docker](#-docker)
-- [Contributing](#-contributing)
-- [Security](#-security)
-- [Drips Wave Program](#-drips-wave-program)
-- [License](#-license)
-
----
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Smart Contract](#smart-contract)
+- [Backend API](#backend-api)
+- [Frontend Dashboard](#frontend-dashboard)
+- [Development](#development)
+- [Testing](#testing)
+- [Docker](#docker)
+- [Contributing](#contributing)
+- [Security](#security)
+- [Support](#support)
+- [License](#license)
 
 ## 🎯 Overview
 
-**MultiSig Vault** is a decentralized treasury management platform built on Stellar Soroban that requires multiple approvals before funds can be moved. Perfect for DAOs, teams, and organizations that need secure, transparent fund management.
+MultiSig Vault is a decentralized treasury management platform built on Stellar Soroban that requires multiple approvals before funds can be moved. Perfect for DAOs, teams, and organizations.
 
-### Use Cases
+The platform consists of three main components:
 
-| Use Case | Description |
-|----------|-------------|
-| 🏢 **DAO Treasuries** | Manage community funds with multi-sig governance |
-| 👥 **Team Operations** | Payroll, expenses, and subscriptions with approval workflow |
-| 💰 **Investment Clubs** | Pool funds with collective decision-making |
-| 🎯 **Grant Programs** | Disburse grants with multi-party approval |
-| 🏦 **Community Funds** | Transparent management of community resources |
-
----
+| Component | Description | Technology |
+|-----------|-------------|------------|
+| **Smart Contract** | Multi-signature logic on Stellar | Rust (Soroban) |
+| **Backend API** | Vault and transaction management | NestJS |
+| **Frontend Dashboard** | User interface for wallet connection | Next.js |
 
 ## 🛠 Tech Stack
 
 | Category | Technology | Version |
 |----------|------------|---------|
-| **Smart Contract** | Rust (Soroban SDK) | 25.1.0 |
-| **Backend Framework** | NestJS | 10.x |
-| **Backend Language** | TypeScript | 5.x |
-| **Frontend Framework** | Next.js | 14.2 |
-| **Frontend Language** | TypeScript | 5.x |
-| **Database** | PostgreSQL | 15.x |
-| **ORM** | TypeORM | 0.3.x |
-| **Wallet** | Freighter API | 1.7.1 |
-| **Testing** | Jest | 29.x |
-| **Blockchain** | Stellar Soroban | - |
-
----
-
-## ✨ Features
-
-| Feature | Description |
-|---------|-------------|
-| 🔐 **Multi-Signature Escrow** | 2-of-3, 3-of-5, or custom approval thresholds |
-| 📊 **Spending Policies** | Per-signer daily, weekly, monthly limits |
-| ⏰ **Time-Locked Withdrawals** | Large transfers require waiting period |
-| 📅 **Scheduled Payments** | Recurring payroll, subscriptions, or one-time future payments |
-| 👨‍👩‍👧‍👦 **Social Recovery** | Guardian-based key recovery system |
-| 📝 **Audit Log** | IPFS-backed immutable transaction history |
-| 🛡️ **Emergency Override** | 2FA-protected emergency procedures |
-| 📈 **Analytics Dashboard** | Real-time treasury metrics and insights |
-
----
+| Smart Contract | Rust (Soroban SDK) | 25.1.0 |
+| Backend Framework | NestJS | 10.x |
+| Backend Language | TypeScript | 5.x |
+| Frontend Framework | Next.js | 14.2 |
+| Frontend Language | TypeScript | 5.x |
+| Database | PostgreSQL | 15.x |
+| ORM | TypeORM | 0.3.x |
+| Wallet | Freighter API | 1.7.1 |
+| Testing | Jest | 29.x |
 
 ## 📁 Project Structure
 
+```
 multisig-vault/
-├── contract/ # Rust Soroban Smart Contract (8,000+ lines)
-│ ├── src/
-│ │ ├── lib.rs # Main contract entry with all traits
-│ │ ├── vault.rs # Vault creation and management
-│ │ ├── transaction.rs # Transaction submission and approval
-│ │ ├── policy.rs # Spending policies per signer
-│ │ ├── recovery.rs # Social recovery system
-│ │ ├── timelock.rs # Time-locked withdrawals
-│ │ ├── scheduled.rs # Scheduled/recurring payments
-│ │ ├── audit.rs # Audit log with IPFS
-│ │ └── test.rs # Comprehensive tests (100+ test cases)
-│ └── Cargo.toml # Rust dependencies
+├── backend/ # NestJS Backend API
+│   ├── src/
+│   │   ├── main.ts # Application entry point
+│   │   ├── app.module.ts # Root module
+│   │   ├── common/ # Shared utilities
+│   │   │   ├── guards/ # Auth guards
+│   │   │   └── interceptors/ # Request interceptors
+│   │   ├── config/ # Configuration
+│   │   ├── modules/
+│   │   │   ├── users/ # User management
+│   │   │   ├── vaults/ # Vault CRUD
+│   │   │   └── transactions/ # Transaction processing
+│   │   └── database/ # Database entities
+│   ├── test/ # E2E tests
+│   └── package.json
 │
-├── backend/ # NestJS Backend API (12,000+ lines)
-│ ├── src/
-│ │ ├── main.ts # Application entry point
-│ │ ├── app.module.ts # Root module with all imports
-│ │ ├── config/ # Database and app configuration
-│ │ ├── common/ # Shared guards, interceptors, pipes
-│ │ └── modules/
-│ │ ├── users/ # User authentication and management
-│ │ ├── vaults/ # Vault CRUD operations
-│ │ └── transactions/ # Transaction tracking and approval
-│ ├── package.json
-│ ├── tsconfig.json
-│ ├── Dockerfile
-│ └── docker-compose.yml
+├── contract/ # Rust Soroban Smart Contract
+│   ├── src/
+│   │   ├── lib.rs # Main contract entry
+│   │   ├── vault.rs # Vault creation and management
+│   │   ├── transaction.rs # Transaction submission and approval
+│   │   ├── policy.rs # Spending policies and trackers
+│   │   ├── recovery.rs # Social recovery system
+│   │   ├── timelock.rs # Time-locked transactions
+│   │   ├── scheduled.rs # Recurring payments
+│   │   ├── audit.rs # Audit logging with IPFS
+│   │   └── test.rs # Comprehensive tests
+│   └── Cargo.toml
 │
-├── frontend/ # Next.js Dashboard (8,000+ lines)
-│ ├── src/
-│ │ ├── app/
-│ │ │ ├── layout.tsx # Root layout with providers
-│ │ │ ├── page.tsx # Landing page with hero section
-│ │ │ ├── vaults/ # Vault listing and detail pages
-│ │ │ └── transactions/ # Transaction history
-│ │ ├── components/
-│ │ │ ├── wallet/ # Freighter wallet integration
-│ │ │ ├── vault/ # Vault cards and forms
-│ │ │ └── ui/ # Reusable UI components
-│ │ ├── lib/ # Stellar SDK utilities
-│ │ └── styles/ # Tailwind CSS styles
-│ ├── package.json
-│ ├── tailwind.config.js
-│ └── next.config.js
-│
-├── mobile/ # React Native (optional future)
+├── frontend/ # Next.js Dashboard
+│   ├── src/
+│   │   ├── app/ # Pages
+│   │   │   ├── layout.tsx # Root layout
+│   │   │   ├── page.tsx # Landing page
+│   │   │   ├── vaults/ # Vault management
+│   │   │   └── transactions/ # Transaction history
+│   │   ├── components/ # React components
+│   │   │   ├── wallet/ # Freighter integration
+│   │   │   ├── vault/ # Vault components
+│   │   │   └── ui/ # Reusable UI
+│   │   ├── lib/ # Utilities
+│   │   │   └── stellar/ # Stellar SDK helpers
+│   │   └── styles/ # Global styles
+│   └── package.json
 │
 ├── .github/
-│ └── workflows/ # CI/CD pipelines
-│ ├── contract-ci.yml # Rust contract tests and deployment
-│ ├── backend-ci.yml # NestJS tests and build
-│ └── frontend-ci.yml # Next.js tests and build
+│   └── workflows/ # CI/CD pipelines
 │
-├── .gitignore
-├── LICENSE
+├── docker-compose.yml
 └── README.md
-
----
-
-## 📋 Prerequisites
-
-| Requirement | Version | Installation |
-|-------------|---------|--------------|
-| Node.js | 18.x+ | https://nodejs.org/ |
-| Rust | 1.70+ | https://rustup.rs/ |
-| PostgreSQL | 15.x+ | https://www.postgresql.org/ |
-| Freighter Wallet | Latest | https://www.freighter.app/ |
-
----
+```
 
 ## 🚀 Getting Started
 
-### Clone the Repository
+### Prerequisites
+
+| Requirement | Version | Installation |
+|-------------|---------|--------------|
+| Node.js | 18+ | https://nodejs.org/ |
+| Rust | 1.70+ | https://rustup.rs/ |
+| PostgreSQL | 15+ | https://www.postgresql.org/ |
+| Freighter Wallet | Latest | https://www.freighter.app/ |
+
+### Clone Repository
 
 ```bash
 git clone https://github.com/MultiSigVault/multisig-vault.git
@@ -161,12 +124,8 @@ cd multisig-vault
 cd backend
 npm install
 cp .env.example .env
-npm run typeorm migration:run
 npm run start:dev
 ```
-
-Backend will run at: http://localhost:3001  
-API Docs: http://localhost:3001/api/v1/docs
 
 ### Frontend Setup
 
@@ -177,58 +136,102 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Frontend will run at: http://localhost:3000
-
-### Smart Contract Setup
+### Contract Setup
 
 ```bash
 cd contract
 cargo build --target wasm32-unknown-unknown --release
 cargo test
-stellar contract deploy \
-  --wasm target/wasm32-unknown-unknown/release/multisig_vault_contract.wasm \
-  --network testnet
 ```
-
----
 
 ## 📜 Smart Contract
 
 ### Contract Functions
 
-| Function | Description | Auth Required |
-|----------|------------|---------------|
-| create_vault | Create new multi-sig vault | Creator |
-| submit_transaction | Propose a new transaction | Any signer |
-| approve_transaction | Approve a pending transaction | Signer |
-| revoke_approval | Revoke an existing approval | Signer |
-| execute_transaction | Execute after threshold met | Anyone |
-| set_spending_policy | Set limits per signer | Admin |
-| add_guardian | Add recovery guardian | Admin |
-| initiate_recovery | Start key recovery process | Any guardian |
-| create_timelock | Add time delay to transaction | Proposer |
-| schedule_transaction | Set recurring payment | Admin |
+| Function | Description |
+|----------|------------|
+| create_vault | Create new multi-signature vault |
+| submit_transaction | Propose new transaction |
+| approve_transaction | Approve pending transaction |
+| revoke_approval | Revoke existing approval |
+| execute_transaction | Execute after threshold met |
+| set_spending_policy | Set limits per signer |
+| add_guardian | Add recovery guardian |
+| initiate_recovery | Start key recovery process |
+| create_timelock | Add time delay |
+| schedule_transaction | Set up recurring payment |
 
-### Contract Errors
+### Deploy Contract
 
-| Error | Code | Description |
-|-------|------|------------|
-| NotAuthorized | 1 | Only authorized participants |
-| VaultNotFound | 2 | Vault ID does not exist |
-| TransactionNotFound | 3 | Transaction ID does not exist |
-| InsufficientApprovals | 4 | Not enough approvals yet |
-| ThresholdTooHigh | 6 | Threshold exceeds signer count |
-| PolicyViolation | 16 | Spending limit exceeded |
-| TimeLockActive | 17 | Time lock not expired |
-| ScheduleNotReady | 19 | Scheduled transaction not ready |
+```bash
+stellar contract deploy \
+  --wasm target/wasm32-unknown-unknown/release/multisig_vault_contract.wasm \
+  --network testnet
+```
 
----
+## 🔧 Backend API
 
-## 📚 API Documentation
+### API Endpoints
 
-http://localhost:3001/api/v1/docs
+| Method | Endpoint | Description |
+|--------|----------|------------|
+| POST | /api/v1/vaults | Create vault |
+| GET | /api/v1/vaults | List vaults |
+| GET | /api/v1/vaults/:id | Get vault |
+| POST | /api/v1/transactions | Submit transaction |
+| POST | /api/v1/transactions/:id/approve | Approve |
+| POST | /api/v1/transactions/:id/execute | Execute |
+| GET | /api/v1/transactions/vault/:vaultId | List transactions |
 
----
+### API Documentation
+
+Swagger available at: http://localhost:3001/api/docs
+
+## 💻 Frontend Dashboard
+
+### Wallet Integration
+
+- Install Freighter extension  
+- Click "Connect Wallet"  
+- Approve connection  
+
+### Pages
+
+| Page | Description |
+|------|------------|
+| / | Landing page |
+| /vaults | List all vaults |
+| /vaults/[id] | Vault details |
+| /transactions | Transaction history |
+
+## 💻 Development
+
+### Backend Scripts
+
+| Command | Description |
+|--------|------------|
+| npm run start:dev | Start with hot reload |
+| npm run build | Build for production |
+| npm run test | Run unit tests |
+| npm run test:cov | Run tests with coverage |
+
+### Frontend Scripts
+
+| Command | Description |
+|--------|------------|
+| npm run dev | Start development server |
+| npm run build | Build for production |
+| npm run start | Run production build |
+| npm run lint | Run ESLint |
+
+### Contract Commands
+
+| Command | Description |
+|--------|------------|
+| cargo build | Build contract |
+| cargo test | Run tests |
+| cargo fmt | Format code |
+| cargo clippy | Run linter |
 
 ## 🧪 Testing
 
@@ -247,7 +250,6 @@ npm run test:e2e
 cd contract
 cargo test
 cargo test -- --nocapture
-cargo test test_vault_creation -- --exact
 ```
 
 ### Frontend Tests
@@ -255,94 +257,90 @@ cargo test test_vault_creation -- --exact
 ```bash
 cd frontend
 npm run test
-npm run test:watch
+npm run test:e2e
 ```
-
----
 
 ## 🐳 Docker
 
 ```bash
+# Start all services
 docker-compose up -d
-docker-compose logs -f
+
+# Stop services
 docker-compose down
 ```
 
----
-
 ## 🤝 Contributing
+
+We welcome contributions! Please read our CONTRIBUTING.md for detailed guidelines on:
+
+- Setting up your development environment  
+- Making code changes  
+- Creating pull requests  
+- Code review process  
+- Commit message conventions  
 
 ### Commit Convention
 
-| Type | Description | Example |
-|------|------------|---------|
-| feat | New feature | feat: add spending policy limits |
-| fix | Bug fix | fix: correct threshold validation |
-| docs | Documentation | docs: update API swagger |
-| style | Code style | style: format with prettier |
-| refactor | Code refactor | refactor: optimize storage queries |
-| test | Testing | test: add recovery edge cases |
-| chore | Maintenance | chore: update dependencies |
-
-### Pull Request Process
-
-1. Fork the repository  
-2. Create a feature branch  
-3. Commit your changes  
-4. Push to your branch  
-5. Open a Pull Request  
-
----
+| Type | Description |
+|------|------------|
+| feat | New feature |
+| fix | Bug fix |
+| docs | Documentation update |
+| style | Code style changes |
+| refactor | Code refactor |
+| test | Add or update tests |
+| chore | Maintenance tasks |
 
 ## 🔒 Security
 
 ### Reporting Vulnerabilities
 
-Do NOT open public issues for security vulnerabilities.  
-Email: security@multisigvault.com  
+Please DO NOT file public issues for security vulnerabilities.
 
-### Best Practices
+Email security@multisigvault.com with:
 
-- Never commit `.env` files  
-- Use environment variables  
-- Validate all inputs  
-- Enable 2FA  
-- Perform audits regularly  
+- Description of the vulnerability  
+- Steps to reproduce  
+- Potential impact  
+- Suggested fix (if any)  
 
----
+### Security Best Practices
 
-## 🏆 Drips Wave Program
+- Never commit .env files with sensitive data  
+- Always use environment variables for secrets  
+- Validate all user inputs  
+- Follow OWASP security guidelines  
+- Use require_auth() for all sensitive contract functions  
+- Regular security audits  
 
-### Bounty Categories
+### Security Response
 
-| Difficulty | Points |
-|-----------|--------|
-| Easy | 100 |
-| Medium | 150 |
-| Hard | 200 |
+| Severity | Response Time |
+|----------|--------------|
+| Critical | 24 hours |
+| High | 48 hours |
+| Medium | 7 days |
+| Low | 14 days |
 
-### How to Claim
+## 🆘 Support
 
-1. Find issue labeled `drips-wave`  
-2. Comment `@drips-bot claim`  
-3. Submit PR  
-4. Get rewarded  
+For issues, questions, or suggestions:
 
----
+| Channel | Link |
+|--------|------|
+| GitHub Issues | Open an issue |
+| Discord | Join Discord |
+| Email | team@multisigvault.com |
+
+### Before Creating an Issue
+
+- Check existing GitHub Issues  
+- Read the documentation  
+- Check Discussions  
 
 ## 📄 License
 
-MIT License - See LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
----
-
-## 📞 Contact
-
-- Website: multisigvault.com  
-- Twitter: @MultiSigVault  
-- Discord: discord.gg/multisigvault  
-- Email: team@multisigvault.com  
-
----
-
-Built with ❤️ on Stellar Soroban
+Built on Stellar Soroban | Secure Multi-Signature Treasury Management
